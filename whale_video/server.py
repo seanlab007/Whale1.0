@@ -37,6 +37,46 @@ _tasks: dict[str, dict] = {}
 _lock = threading.Lock()
 
 
+# ── Engine name normalization ─────────────────────────────────────────────────
+# Model registry keys (e.g. "wan2.2-t2v") differ from pipeline engine keys
+# ("wan2.2"). Map them here so MaoAI can send registry keys directly.
+
+ENGINE_ALIASES = {
+    "wan2.2": "wan2.2",
+    "wan2.2-t2v": "wan2.2",
+    "wan2.2-i2v": "wan2.2",
+    "cogvideox": "cogvideox",
+    "cogvideox-2": "cogvideox",
+    "hunyuanvideo": "hunyuanvideo",
+    "hunyuanvideo-1.5": "hunyuanvideo",
+    "mochi": "mochi",
+    "mochi-1": "mochi",
+    "ltx-video": "ltx-video",
+    "ltx-video-2.3": "ltx-video",
+}
+
+# Engine IDs exposed via /api/models (derisked for pipeline compatibility)
+ENGINE_IDS_FOR_API = [
+    {"id": "wan2.2",         "name": "Wan2.2-T2V-14B",        "type": "text-to-video"},
+    {"id": "cogvideox",      "name": "CogVideoX-2",           "type": "text-to-video"},
+    {"id": "hunyuanvideo",   "name": "HunyuanVideo-1.5",      "type": "text-to-video"},
+    {"id": "mochi",          "name": "Mochi-1",               "type": "text-to-video"},
+    {"id": "ltx-video",     "name": "LTX-Video-2.3",         "type": "text-to-video"},
+    {"id": "skyreels-v1",    "name": "SkyReels-V1",           "type": "text-to-video"},
+    {"id": "liveportrait",   "name": "LivePortrait",          "type": "portrait-animation"},
+    {"id": "wav2lip",        "name": "Wav2Lip",               "type": "lip-sync"},
+    {"id": "animatediff",    "name": "AnimateDiff",           "type": "animation"},
+    {"id": "rife",           "name": "RIFE",                  "type": "frame-interpolation"},
+]
+
+
+def normalize_engine(engine: str) -> str:
+    """Convert model registry keys to pipeline-compatible engine names."""
+    if not engine or engine == "auto":
+        return "auto"
+    return ENGINE_ALIASES.get(engine, engine)
+
+
 # ── Request / Response models ─────────────────────────────────────────────────
 
 class GenerateRequest(BaseModel):
@@ -100,7 +140,7 @@ def _run_generation(task_id: str, req: GenerateRequest) -> None:
             _tasks[task_id]["status"] = "PROCESSING"
             _tasks[task_id]["progress"] = 0.0
 
-        # Lazy imports — torch only loads here
+        # Lazy imports — torch/diffusers only loads here
         from whale_video import T2VPipeline, WhaleConfig
 
         config = WhaleConfig()
@@ -113,9 +153,11 @@ def _run_generation(task_id: str, req: GenerateRequest) -> None:
         output_dir.mkdir(parents=True, exist_ok=True)
         output_path = output_dir / f"{task_id}.mp4"
 
+        engine = normalize_engine(req.engine)
+
         result = pipeline.generate(
             prompt=req.prompt,
-            engine=req.engine,
+            engine=engine,
             negative_prompt=req.negative_prompt,
             num_frames=req.num_frames,
             fps=req.fps,
@@ -199,27 +241,8 @@ async def serve_video(task_id: str):
 
 @app.get("/api/models", response_model=list[ModelInfo])
 async def list_models():
-    """List all available video generation engines."""
-    try:
-        from whale_video.config import MODEL_REGISTRY
-
-        models = []
-        for key, info in MODEL_REGISTRY.items():
-            models.append(ModelInfo(
-                id=key,
-                name=info.get("name", key),
-                type=info.get("type", "unknown"),
-            ))
-        return models
-    except ImportError:
-        # Fallback: return hardcoded engine list
-        return [
-            ModelInfo(id="wan2.2", name="Wan2.2-T2V-14B", type="text-to-video"),
-            ModelInfo(id="cogvideox", name="CogVideoX-2", type="text-to-video"),
-            ModelInfo(id="hunyuanvideo", name="HunyuanVideo-1.5", type="text-to-video"),
-            ModelInfo(id="mochi", name="Mochi-1", type="text-to-video"),
-            ModelInfo(id="ltx-video", name="LTX-Video-2.3", type="text-to-video"),
-        ]
+    """List all available video generation engines (pipeline-compatible IDs)."""
+    return [ModelInfo(**m) for m in ENGINE_IDS_FOR_API]
 
 
 @app.get("/api/health", response_model=HealthResponse)
