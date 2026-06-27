@@ -25,8 +25,7 @@ outputs/
 outputs/*
 !outputs/.gitkeep
 
-# Submodules (clone content ignored; pointers tracked via .gitmodules)
-submodules/**/*
+# Submodules
 
 # IDE
 .idea/
