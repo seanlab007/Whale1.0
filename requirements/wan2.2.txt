@@ -1,0 +1,2 @@
+# Wan2.2 specific requirements (MoE video model)
+# Install from submodules/Wan2.2/

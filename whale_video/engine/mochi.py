@@ -1,0 +1,41 @@
+"""Mochi engine - High quality text-to-video (Genmo)."""
+from pathlib import Path
+from typing import Optional, Union
+from whale_video.engine.base import VideoEngine
+from whale_video.utils import get_torch
+
+
+class MochiEngine(VideoEngine):
+    @property
+    def model_name(self) -> str: return "mochi"
+
+    @property
+    def engine_type(self) -> str: return "text-to-video"
+
+    def load(self, **kwargs) -> None:
+        _torch = get_torch()
+        device = kwargs.get("device", "cuda")
+        dtype = kwargs.get("dtype", "float16")
+        from diffusers import MochiPipeline
+        repo_id = self.config.get("repo_id", "genmo/mochi-1-preview")
+        self._model = MochiPipeline.from_pretrained(
+            repo_id, torch_dtype=getattr(_torch, dtype)
+        ).to(device)
+        self._loaded = True
+
+    def generate(self, prompt: str, num_frames=76, fps=24, steps=50,
+                 guidance_scale=4.5, seed=None, output_path=None, **kwargs) -> Path:
+        if not self._loaded: self.load()
+        _torch = get_torch()
+        output_path = Path(output_path or self.config.get("output_dir", "./outputs"))
+        output_path.mkdir(parents=True, exist_ok=True)
+        generator = _torch.Generator().manual_seed(seed) if seed is not None else None
+        result = self._model(prompt=prompt, num_frames=num_frames,
+                             num_inference_steps=steps, guidance_scale=guidance_scale,
+                             generator=generator)
+        out_file = output_path / f"mochi_{prompt[:30].replace(' ', '_')}.mp4"
+        import imageio
+        writer = imageio.get_writer(str(out_file), fps=fps, codec="libx264")
+        for frame in result.frames[0]: writer.append_data(frame)
+        writer.close()
+        return out_file

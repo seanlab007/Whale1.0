@@ -1,0 +1,3 @@
+# CogVideo specific requirements
+sentencepiece
+# Install from submodules/CogVideo/

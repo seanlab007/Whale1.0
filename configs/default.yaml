@@ -1,0 +1,32 @@
+# Whale1.0 Default Configuration
+
+config:
+  device: "auto"  # auto, cuda, cpu, mps
+  dtype: "float16"  # float16, bfloat16, float32
+  output_dir: "./outputs"
+  models_dir: "./models"
+  submodules_dir: "./submodules"
+  default_engine: "wan2.2-t2v"
+  enable_model_caching: true
+  enable_memory_optimization: true
+  max_video_length_seconds: 30
+  default_fps: 24
+  default_resolution: [720, 1280]  # [H, W]
+
+model_registry:
+  wan2.2-t2v:
+    enabled: true
+    repo_id: "Wan-AI/Wan2.2-T2V-14B"
+    submodule: "Wan2.2"
+  wan2.2-i2v:
+    enabled: true
+    repo_id: "Wan-AI/Wan2.2-I2V-14B"
+    submodule: "Wan2.2"
+  cogvideox-2:
+    enabled: true
+    repo_id: "THUDM/CogVideoX-2b"
+    submodule: "CogVideo"
+  hunyuanvideo:
+    enabled: true
+    repo_id: "Tencent/HunyuanVideo-1.5"
+    submodule: "HunyuanVideo"

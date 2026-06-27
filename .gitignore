@@ -1,0 +1,51 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Model weights (too large for git)
+models/
+models/*
+!models/.gitkeep
+
+# Outputs
+outputs/
+outputs/*
+!outputs/.gitkeep
+
+# Submodules (pointers in .gitmodules, not the files)
+submodules/
+submodules/*
+!submodules/.gitkeep
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+*.orig
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Docker
+docker-compose.override.yml

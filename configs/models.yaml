@@ -1,0 +1,62 @@
+# Whale1.0 Model Registry
+
+models:
+  - id: wan2.2-t2v
+    name: "Wan2.2-T2V-14B"
+    description: "阿里巴巴 MoE 架构文生视频模型，电影级质量"
+    type: text-to-video
+    architecture: MoE
+    parameters: 14B
+    min_vram_gb: 24
+    repo_id: Wan-AI/Wan2.2-T2V-14B
+    license: Apache 2.0
+
+  - id: wan2.2-i2v
+    name: "Wan2.2-I2V-14B"
+    description: "阿里巴巴 MoE 图生视频模型，运动稳定性卓越"
+    type: image-to-video
+    architecture: MoE
+    parameters: 14B
+    min_vram_gb: 24
+    repo_id: Wan-AI/Wan2.2-I2V-14B
+    license: Apache 2.0
+
+  - id: cogvideox-2
+    name: "CogVideoX-2"
+    description: "智谱AI/清华 DiT 模型，中文语义理解优秀"
+    type: text-to-video
+    architecture: DiT
+    parameters: 13B
+    min_vram_gb: 16
+    repo_id: THUDM/CogVideoX-2b
+    license: Apache 2.0
+
+  - id: hunyuanvideo
+    name: "HunyuanVideo-1.5"
+    description: "腾讯混元轻量级 DiT 模型，消费级显卡可跑"
+    type: text-to-video
+    architecture: DiT
+    parameters: 8.3B
+    min_vram_gb: 12
+    repo_id: Tencent/HunyuanVideo-1.5
+    license: Apache 2.0
+
+  - id: mochi
+    name: "Mochi-1"
+    description: "Genmo 高质量文生视频模型"
+    type: text-to-video
+    architecture: DiT
+    parameters: 10B
+    min_vram_gb: 20
+    repo_id: genmo/mochi-1-preview
+    license: Apache 2.0
+
+  - id: ltx-video
+    name: "LTX-Video-2.3"
+    description: "Lightricks 22B DiT 模型，支持音画同步"
+    type: text-to-video
+    architecture: DiT
+    parameters: 22B
+    min_vram_gb: 16
+    repo_id: Lightricks/LTX-Video
+    license: Apache 2.0
