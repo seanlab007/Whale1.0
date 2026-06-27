@@ -1,0 +1,33 @@
+[submodule "submodules/Wan2.2"]
+	path = submodules/Wan2.2
+	url = https://github.com/seanlab007/Wan2.2.git
+[submodule "submodules/CogVideo"]
+	path = submodules/CogVideo
+	url = https://github.com/seanlab007/CogVideo.git
+[submodule "submodules/HunyuanVideo"]
+	path = submodules/HunyuanVideo
+	url = https://github.com/seanlab007/HunyuanVideo.git
+[submodule "submodules/Open-Sora"]
+	path = submodules/Open-Sora
+	url = https://github.com/seanlab007/Open-Sora.git
+[submodule "submodules/mochi"]
+	path = submodules/mochi
+	url = https://github.com/seanlab007/mochi.git
+[submodule "submodules/LTX-Video"]
+	path = submodules/LTX-Video
+	url = https://github.com/seanlab007/LTX-Video.git
+[submodule "submodules/SkyReels-V1"]
+	path = submodules/SkyReels-V1
+	url = https://github.com/seanlab007/SkyReels-V1.git
+[submodule "submodules/LivePortrait"]
+	path = submodules/LivePortrait
+	url = https://github.com/seanlab007/LivePortrait.git
+[submodule "submodules/Wav2Lip"]
+	path = submodules/Wav2Lip
+	url = https://github.com/seanlab007/Wav2Lip.git
+[submodule "submodules/AnimateDiff"]
+	path = submodules/AnimateDiff
+	url = https://github.com/seanlab007/AnimateDiff.git
+[submodule "submodules/ECCV2022-RIFE"]
+	path = submodules/ECCV2022-RIFE
+	url = https://github.com/seanlab007/ECCV2022-RIFE.git

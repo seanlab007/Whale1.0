@@ -6,6 +6,12 @@ from whale_video.utils import get_torch
 
 
 class MochiEngine(VideoEngine):
+    """Mochi engine: high-quality text-to-video generation (Genmo).
+
+    Built on the Mochi architecture with efficient DiT-based generation
+    for producing high-resolution videos from text prompts.
+    """
+
     @property
     def model_name(self) -> str: return "mochi"
 
@@ -16,23 +22,31 @@ class MochiEngine(VideoEngine):
         _torch = get_torch()
         device = kwargs.get("device", "cuda")
         dtype = kwargs.get("dtype", "float16")
-        from diffusers import MochiPipeline
+        try:
+            from diffusers import MochiPipeline
+        except ImportError:
+            raise ImportError(
+                "Mochi requires `diffusers`. Install with: pip install diffusers"
+            )
         repo_id = self.config.get("repo_id", "genmo/mochi-1-preview")
         self._model = MochiPipeline.from_pretrained(
             repo_id, torch_dtype=getattr(_torch, dtype)
         ).to(device)
         self._loaded = True
 
-    def generate(self, prompt: str, num_frames=76, fps=24, steps=50,
+    def generate(self, prompt: str, negative_prompt: Optional[str] = None,
+                 num_frames=76, fps=24, steps=50,
                  guidance_scale=4.5, seed=None, output_path=None, **kwargs) -> Path:
+        """Generate video from text prompt."""
         if not self._loaded: self.load()
         _torch = get_torch()
         output_path = Path(output_path or self.config.get("output_dir", "./outputs"))
         output_path.mkdir(parents=True, exist_ok=True)
         generator = _torch.Generator().manual_seed(seed) if seed is not None else None
-        result = self._model(prompt=prompt, num_frames=num_frames,
+        result = self._model(prompt=prompt, negative_prompt=negative_prompt or "",
+                             num_frames=num_frames,
                              num_inference_steps=steps, guidance_scale=guidance_scale,
-                             generator=generator)
+                             generator=generator, **kwargs)
         out_file = output_path / f"mochi_{prompt[:30].replace(' ', '_')}.mp4"
         import imageio
         writer = imageio.get_writer(str(out_file), fps=fps, codec="libx264")

@@ -18,7 +18,12 @@ class HunyuanEngine(VideoEngine):
         _torch = get_torch()
         device = kwargs.get("device", "cuda")
         dtype = kwargs.get("dtype", "float16")
-        from diffusers import HunyuanVideoPipeline
+        try:
+            from diffusers import HunyuanVideoPipeline
+        except ImportError:
+            raise ImportError(
+                "HunyuanVideo requires `diffusers`. Install with: pip install diffusers"
+            )
         repo_id = self.config.get("repo_id", "Tencent/HunyuanVideo-1.5")
         self._model = HunyuanVideoPipeline.from_pretrained(
             repo_id, torch_dtype=getattr(_torch, dtype)

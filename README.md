@@ -46,6 +46,9 @@ Whale1.0
 git clone https://github.com/seanlab007/Whale1.0.git
 cd Whale1.0
 
+# 初始化子模块（所有 fork 仓库）
+bash scripts/init_submodules.sh
+
 # 安装依赖
 pip install -r requirements/base.txt
 
@@ -55,6 +58,32 @@ bash scripts/download_models.sh
 # 生成视频
 python scripts/run_pipeline.py --prompt "一只在雪地里奔跑的北极熊" --engine wan2.2
 ```
+
+## 子模块
+
+Whale1.0 集成了 11 个顶级开源仓库，全部 fork 至 `github.com/seanlab007/`：
+
+```bash
+# 初始化所有子模块（浅克隆，建议首选）
+bash scripts/init_submodules.sh
+
+# 完整克隆（获取完整 git 历史）
+bash scripts/init_submodules.sh --depth 0
+
+# 初始化单个
+git clone --depth 1 https://github.com/seanlab007/Wan2.2.git submodules/Wan2.2
+```
+
+## 四端同步
+
+项目同步到以下四个平台：
+
+| 平台 | URL | 状态 |
+|------|-----|------|
+| GitHub | https://github.com/seanlab007/Whale1.0 | ✅ |
+| GitLab | https://gitlab.com/seanlab007/Whale1.0 | ✅ |
+| Gitee | https://gitee.com/seanlab007/Whale1.0 | ✅ |
+| 本地 | `/path/to/whale1.0` | ✅ |
 
 ## 模型注册表
 

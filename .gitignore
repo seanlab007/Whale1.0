@@ -25,7 +25,8 @@ outputs/
 outputs/*
 !outputs/.gitkeep
 
-# Submodules
+# Submodules (cloned by scripts/init_submodules.sh)
+submodules/**/*
 
 # IDE
 .idea/

@@ -39,7 +39,13 @@ class Wan2Engine(VideoEngine):
             self._load_diffusers(device, dtype, _torch)
 
     def _load_diffusers(self, device: str, dtype: str, _torch) -> None:
-        from diffusers import DiffusionPipeline
+        try:
+            from diffusers import DiffusionPipeline
+        except ImportError:
+            raise ImportError(
+                "Wan2.2 requires `diffusers` for fallback path. "
+                "Install with: pip install diffusers"
+            )
         repo_id = self.config.get("repo_id", "Wan-AI/Wan2.2-T2V-14B")
         self._model = DiffusionPipeline.from_pretrained(
             repo_id,

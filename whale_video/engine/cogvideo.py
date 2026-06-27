@@ -22,7 +22,12 @@ class CogVideoEngine(VideoEngine):
         dtype = kwargs.get("dtype", self.config.get("dtype", "float16"))
         print(f"[CogVideoX] Loading model...")
 
-        from diffusers import CogVideoXPipeline
+        try:
+            from diffusers import CogVideoXPipeline
+        except ImportError:
+            raise ImportError(
+                "CogVideoX requires `diffusers`. Install with: pip install diffusers"
+            )
         repo_id = self.config.get("repo_id", "THUDM/CogVideoX-2b")
         self._model = CogVideoXPipeline.from_pretrained(
             repo_id, torch_dtype=getattr(_torch, dtype),
