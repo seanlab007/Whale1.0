@@ -47,3 +47,8 @@ Thumbs.db
 
 # Docker
 docker-compose.override.yml
+
+# PM2 logs
+logs/
+logs/*
+!logs/.gitkeep
