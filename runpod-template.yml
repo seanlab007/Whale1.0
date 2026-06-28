@@ -1,0 +1,29 @@
+# RunPod Serverless Template — Whale1.0 Face Tools
+# 
+# Create this template on runpod.io/console/serverless:
+#
+# Container Image:    runpod/pytorch:2.2.0-py3.10-cuda12.1.1-runtime-22.04
+# Container Disk:     20 GB
+# Environment:
+#   HF_TOKEN           = hf_xxx          (HuggingFace token for model download)
+#   FACE_MODELS_DIR    = /models/face
+#
+# Worker Command:     python scripts/runpod_worker.py
+#
+# Runtime:
+#   Execution Timeout: 300 seconds
+#   Max Workers:       3
+#   Idle Timeout:      60 seconds
+#
+# Network Volume (for model caching):
+#   Mount Path:        /models
+#   Volume Name:       whale-models
+#
+
+name: whale-face-swap
+image: runpod/pytorch:2.2.0-py3.10-cuda12.1.1-runtime-22.04
+disk: 20
+env:
+  HF_TOKEN: hf_xxx
+  FACE_MODELS_DIR: /models/face
+worker_command: python scripts/runpod_worker.py
